@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, classification_report, mean_squared_error
 import time as t
+from sklearn.decomposition import PCA as SklearnPCA
+
+
 
 EXAMPLES_DISPLAYED = 10
 
@@ -59,6 +62,34 @@ def PCA(variance_threshold):
   #Each sample is a k-dimensional vector
   return X_centered @ Vk.T
 
+print("Computing explained variance...")#plot start
+
+pca_full = SklearnPCA()
+
+pca_full.fit(X)
+
+explained_var = np.cumsum(pca_full.explained_variance_ratio_) 
+plt.figure(figsize=(8, 5))
+plt.plot(explained_var, linewidth=2)
+plt.axhline(y=0.95, color='r', linestyle='--', label='95% variance')
+plt.axhline(y=0.80, color='g', linestyle='--', label='80% variance')
+
+k_95 = np.argmax(explained_var >= 0.95) + 1
+k_80 = np.argmax(explained_var >= 0.80) + 1
+
+plt.axvline(x=k_95, color='r', linestyle=':')
+plt.axvline(x=k_80, color='g', linestyle=':')
+
+plt.xlabel("Number of Principal Components")
+plt.ylabel("Cumulative Explained Variance")
+plt.title("PCA Explained Variance on MNIST")
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+print(f"Components for 95% variance: {k_95}")
+print(f"Components for 80% variance: {k_80}")
+#p end
 
 Z = PCA(0.95)
 print(f"{X.shape}{Z.shape}")
