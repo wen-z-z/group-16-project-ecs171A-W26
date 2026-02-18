@@ -1,0 +1,6 @@
+scikit_learn_data/
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
